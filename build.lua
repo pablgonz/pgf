@@ -154,7 +154,7 @@ local function manual()
         },
         xetex = {
             latex = "xelatex --no-pdf --interaction=nonstopmode --halt-on-error pgfmanual.tex",
-            postaction = "xdvipdfmx -p a4 pgfmanual.dvi"
+            postaction = "xdvipdfmx -p a4 pgfmanual.xdv"
         }
     }
 
@@ -188,7 +188,7 @@ local function manual()
 
         for _, line in ipairs(log) do
             if string.match(line, "There were undefined references") or
-                string.match(line, "Rerun to get cross%-references right") or 
+                string.match(line, "Rerun to get cross%-references right") or
                 string.match(line, "Rerun to get the bars right") then
                 rerun = true
                 break
@@ -376,7 +376,7 @@ tasks.help = function()
     print("Available commands:")
     for task in pairs(tasks) do
         print("  " .. task)
-    end 
+    end
 end
 local task = tasks[arg[1] or "help"]
 task()

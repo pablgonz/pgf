@@ -5,6 +5,9 @@ install:
 - source texlive.sh
 - cd ..
 
+git:
+  depth: 5
+
 cache:
   directories:
   - /tmp/texlive

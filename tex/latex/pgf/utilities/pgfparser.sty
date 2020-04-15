@@ -1,4 +1,4 @@
-% Copyright 2018 by Till Tantau
+% Copyright 2020 by Till Tantau
 %
 % This file may be distributed and/or modified
 %
@@ -7,11 +7,9 @@
 %
 % See the file doc/generic/pgf/licenses/LICENSE for more details.
 
+\RequirePackage{pgfrcs}
+\RequirePackage{pgfkeys}
 
-\RequirePackage{pgfcore}
-
-\PackageWarning{pgf}{This package is obsolete. Use \string\usepgfmodule{matrix} instead}
-
-\usepgfmodule{matrix}
+\input{pgfmoduleparser.code.tex}
 
 \endinput

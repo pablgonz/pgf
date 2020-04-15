@@ -205,10 +205,17 @@ local function manual()
 
     -- Run the postaction
     if type(enginesettings[engine].postaction) == "string" then
-        os.execute(enginesettings[engine].postaction)
+        local action = enginesettings[engine].postaction
+        local success, exit, signal = os.execute(action)
+        if not success then
+            error("There were errors during \"" .. tostring(action) .. "\"")
+        end
     elseif type(enginesettings[engine].postaction) == "table" then
         for _, action in ipairs(enginesettings[engine].postaction) do
-            os.execute(action)
+            local success, exit, signal = os.execute(action)
+            if not success then
+                error("There were errors during \"" .. tostring(action) .. "\"")
+            end
         end
     end
 
@@ -261,7 +268,7 @@ local function generate_FILES()
     return files
 end
 
-local function generate_TDSzip()
+local function generate_TDSzip(filename)
     local files = generate_FILES()
 
     -- write FILES
@@ -286,16 +293,16 @@ local function generate_TDSzip()
     end
 
     -- zip it all up
-    local zipfile = "pgf_" .. git.tag .. ".tds.zip"
+    local zipfile = filename or ("pgf_" .. git.tag .. ".tds.zip")
     local filelist = table.concat(files, " ")
     os.execute(table.concat({"zip", zipfile, filelist}, " "))
 
     return zipfile
 end
 
-local function generate_CTANzip()
+local function generate_CTANzip(filename)
     local files = generate_FILES()
-    local tds = generate_TDSzip()
+    local tds = generate_TDSzip("pgf.tds.zip")
 
     local tmproot = tmpdir()
     local tmppgf = tmproot .. "pgf/"
@@ -355,7 +362,7 @@ local function generate_CTANzip()
     lfs.copy(tds, tmproot .. tds)
 
     -- Pack zipfile
-    local ctanzip = "pgf_" .. git.tag .. ".ctan.flatdir.zip"
+    local ctanzip = filename or ("pgf_" .. git.tag .. ".ctan.flatdir.zip")
     local cwd = lfs.currentdir()
     lfs.chdir(tmproot)
     os.execute(table.concat({"zip -r", cwd .. "/" .. ctanzip, "."}, " "))
